@@ -3,6 +3,10 @@ export interface Config {
   services: Service[]
 }
 
+export interface EMailRecipients {
+  [email: string]: string[]
+}
+
 export interface Store {
   incidents: Incident[];
   pings: Ping[];
@@ -12,6 +16,7 @@ export interface Store {
 export interface Namespace {
   id: string;
   name: string;
+  url: string;
 }
 
 export interface Service {
@@ -25,6 +30,8 @@ export interface Service {
 }
 
 export interface Incident {
+  id: number;
+  namespace: string;
   service: string;
   start: number;
   end?: number;
@@ -36,9 +43,25 @@ export enum PingKind {
 }
 
 export interface Ping {
+  namespace: string;
   service: string;
   time: number;
   ms: number;
   location: string,
   kind?: PingKind;
+}
+
+export function pingKindFromString(value?: string | PingKind): PingKind | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  switch (String(value.trim().toUpperCase())) {
+    case "INITIAL":
+      return PingKind.INITIAL;
+    case "ALIVE":
+      return PingKind.ALIVE;
+    default:
+      throw new Error(`Unknown ping type: ${value}`);
+  }
 }

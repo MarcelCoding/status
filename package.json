@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "publish": "wrangler publish"
+    "publish": "wrangler publish",
+    "tail": "wrangler tail"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.3.1",

@@ -1,6 +1,7 @@
 namespaces:
   - id: m4rc3l
     name: M4rc3l
+    url: https://status.m4rc3l.de
 
 services:
   - id: google
