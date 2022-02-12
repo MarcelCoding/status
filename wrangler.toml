@@ -1,0 +1,20 @@
+name = "status"
+type = "javascript"
+workers_dev = false
+zone_id = "b820a9fe742f410d3dfb40cc398c7577"
+account_id = "2a09613716e511a8fe8ca74abc084762"
+compatibility_date = "2022-01-30"
+
+routes = [
+    "status.m4rc3l.de/api/*"
+]
+
+kv_namespaces = [
+    { binding = "STATUS", id = "af4e61ca53f84ea08065d70ca2003ae0" }
+]
+
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "service-worker"

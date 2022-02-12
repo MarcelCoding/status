@@ -1,0 +1,7 @@
+node_modules
+dist
+worker
+.idea
+*.iml
+hook.json
+hook.dev.json
