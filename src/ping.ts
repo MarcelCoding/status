@@ -1,18 +1,25 @@
 import {Request} from "itty-router";
 import {json, status} from "itty-router-extras";
 import {Config, Ping, pingKindFromString} from "./domain";
-import {load, save} from "./store";
+import {Store} from "./store";
 
-export async function getPings(): Promise<Response> {
-  const store = await load();
-  return json(store.pings);
+export function getPings(): Promise<Response> {
+  return Store.load(false, true, false)
+      .then(store => json(store.getPings().map(([namespace, service, time, ms, location, kind]) => ({
+        namespace,
+        service,
+        time,
+        ms,
+        location,
+        kind
+      }))));
 }
 
 export async function postPings(config: Config, request: Request): Promise<Response> {
   const newPings: Ping[] = await request.json?.();
 
   if (newPings.length) {
-    const store = await load();
+    const store = await Store.load(true, true, true/*false, true, false*/);
 
     for (let ping of newPings) {
       const newPing = {
@@ -32,13 +39,13 @@ export async function postPings(config: Config, request: Request): Promise<Respo
         throw new Error(`Service ${newPing.service} not found`);
       }
 
-      store.pings.push(newPing);
+      store.addPing(newPing);
     }
 
     // TODO
     // archivePings(store);
 
-    await save(store);
+    await store.save();
   }
 
   return status(202);

@@ -3,6 +3,18 @@ namespaces:
     name: M4rc3l
     url: https://status.m4rc3l.de
 
+  - id: cryptic
+    name: Cryptic
+    url: https://status.cryptic-game.net
+
+  - id: morpheus
+    name: Morpheus
+    url: https://status.the-morpheus.de
+
+  - id: secshell
+    name: Secure Shell Networks
+    url: https://status.secshell.net
+
 services:
   - id: google
     name: Google
@@ -16,6 +28,198 @@ services:
     name: ABC
     namespace: m4rc3l
     url: https://abc.m4rc3l.de/abc
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: ws
+    name: WebSocket
+    namespace: cryptic
+    url: https://ws.cryptic-game.net
+    method: GET
+    timeout: 5
+    status: 400
+
+  - id: rest-api
+    name: Rest Api
+    namespace: cryptic
+    url: https://server.cryptic-game.net/status
+    method: GET
+    timeout: 5
+    status: 200
+
+  - id: frontend
+    name: Frontend
+    namespace: cryptic
+    url: https://play.cryptic-game.net
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: website
+    name: Website
+    namespace: cryptic
+    url: https://www.cryptic-game.net
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: wiki
+    name: Wiki
+    namespace: cryptic
+    url: https://wiki.cryptic-game.net
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: docs
+    name: Documentation
+    namespace: cryptic
+    url: https://docs.cryptic-game.net
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: weblate
+    name: Weblate
+    namespace: cryptic
+    url: https://weblate.cryptic-game.net
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: website
+    name: Website
+    namespace: morpheus
+    url: https://the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: id
+    name: MorphID
+    namespace: morpheus
+    url: https://id.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 301
+
+  - id: certificates
+    name: Certificates
+    namespace: morpheus
+    url: https://certificates.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: cc
+    name: Coding Challenges
+    namespace: morpheus
+    url: https://cc.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: element
+    name: Element
+    namespace: morpheus
+    url: https://element.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: matrix
+    name: Matrix
+    namespace: morpheus
+    url: https://synapse.the-morpheus.de/_matrix/static/
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: md
+    name: HedgeDoc
+    namespace: morpheus
+    url: https://md.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: academy
+    name: The Morpheus Academy
+    namespace: morpheus
+    url: https://the-morpheus.academy
+    method: GET
+    timeout: 5
+    status: 200
+
+  - id: resources
+    name: Resources
+    namespace: morpheus
+    url: https://resources.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: jitsi
+    name: Jitsi
+    namespace: morpheus
+    url: https://jitsi.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: public
+    name: Public
+    namespace: morpheus
+    url: https://public.the-morpheus.de
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: grafana
+    name: Grafana
+    namespace: morpheus
+    url: https://grafana.the-morpheus.org/login
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: challenges
+    name: Challenges
+    namespace: morpheus
+    url: https://the-morpheus.cc
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: challenges_api
+    name: Challenges API
+    namespace: morpheus
+    url: https://api.the-morpheus.cc/status
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: docs
+    name: Documentation
+    namespace: secshell
+    url: https://docs.secshell.net/de/
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: guacamole
+    name: Apache Guacamole
+    namespace: secshell
+    url: https://guacamole.secshell.net/
+    method: HEAD
+    timeout: 5
+    status: 200
+
+  - id: overleaf
+    name: Overleaf
+    namespace: secshell
+    url: https://overleaf.secshell.net/login
     method: HEAD
     timeout: 5
     status: 200

@@ -19,9 +19,9 @@ export function notify(config: Config, activeIncidents: Incident[], newIncidents
 
   const now = Math.floor(Date.now() / 1000);
 
-  const active = groupBy(activeIncidents.map(incident => formatActiveIncident(config, "Active", incident, now)), "namespace");
-  const new0 = groupBy(newIncidents.map(incident => formatActiveIncident(config, "New", incident, now)), "namespace");
-  const resolved = groupBy(resolvedIncidents.map(incident => formatActiveIncident(config, "Resolved", incident, now)), "namespace");
+  const active = groupBy(activeIncidents.map(incident => formatIncident(config, "Active", incident, now)), "namespace");
+  const new0 = groupBy(newIncidents.map(incident => formatIncident(config, "New", incident, now)), "namespace");
+  const resolved = groupBy(resolvedIncidents.map(incident => formatIncident(config, "Resolved", incident, now)), "namespace");
 
   let notifications = [];
 
@@ -34,12 +34,18 @@ export function notify(config: Config, activeIncidents: Incident[], newIncidents
     let urls = [];
 
     for (let namespace of namespaces) {
-      localActive.push(...(active[namespace] || []));
-      localNew.push(...(new0[namespace] || []));
-      localResolved.push(...(resolved[namespace] || []));
-      const url = config.namespaces.find(n => n.id === namespace)?.url;
-      if (url) {
-        urls.push(url)
+      const a = active[namespace] || [];
+      localActive.push(...a);
+      const b = new0[namespace] || [];
+      localNew.push(...b);
+      const c = resolved[namespace] || [];
+      localResolved.push(...c);
+
+      if (a.length || b.length || c.length) {
+        const url = config.namespaces.find(n => n.id === namespace)?.url;
+        if (url) {
+          urls.push(url)
+        }
       }
     }
 
@@ -74,7 +80,7 @@ function formatMessage(urls: string[], active: string[], new0: string[], resolve
     stats.push(`${resolved.length} resolved`);
   }
 
-  return `<h3>Current Incidents (${humanList(stats)})</h3>
+  return `<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><h3>Current Incidents (${humanList(stats)})</h3>
 <table style="border-collapse:collapse">
   <tr>
     <th style="border-right:1px solid #000;padding:0 5px 5px 0">ID</th>
@@ -85,16 +91,16 @@ function formatMessage(urls: string[], active: string[], new0: string[], resolve
     <th style="border-right:1px solid #000;padding:0 5px 5px">End</th>
     <th style="padding:0 0 5px 5px">Duration</th>
   </tr>
-  <tbody>${new0.join()}${active.join()}${resolved.join()}</tbody>
+  <tbody>${new0.join('')}${active.join('')}${resolved.join('')}</tbody>
 </table>
 <p>For more information visit ${humanOrList(urls.map(url => {
     const u = new URL(url);
     const path = u.pathname.endsWith('/') ? u.pathname.substring(0, u.pathname.length - 1) : u.pathname;
     return `<a href="${url}">${u.hostname}${path}</a>`;
-  }))}!</p>`;
+  }))}!</p></body></html>`;
 }
 
-function formatActiveIncident(config: Config, state: 'New' | 'Active' | 'Resolved', incident: Incident, now: number): { namespace: string, service: string, value: string } {
+function formatIncident(config: Config, state: 'New' | 'Active' | 'Resolved', incident: Incident, now: number): { namespace: string, service: string, value: string } {
   const start = formatRelativeTime(incident.start - now);
 
   return {
@@ -104,10 +110,23 @@ function formatActiveIncident(config: Config, state: 'New' | 'Active' | 'Resolve
 <td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px">${incident.id}</td>
 <td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px">${config.namespaces.find(namespace => namespace.id === incident.namespace)?.name}</td>
 <td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px">${config.services.find(service => service.id === incident.service)?.name}</td>
-<td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px;background-color:${state === 'Resolved' ? '#6ebc6e' : '#ff4b4b'}">${state}</td>
+<td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px;background-color:${getColor(state)}">${state}</td>
 <td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px">${start}</td>
 <td style="border-top:1px solid #000;border-right:1px solid #000;padding:5px">${incident.end ? formatRelativeTime(now - incident.end) : ''}</td>
 <td style="border-top:1px solid #000;padding:5px">${incident.end ? formatDuration(incident.end - incident.start) : ''}</td>
 </tr>`
   };
+}
+
+function getColor(state: 'New' | 'Active' | 'Resolved'): string {
+  switch (state) {
+    case "New":
+      return "#ff4b4b";
+    case "Active":
+      return "#ffa500";
+    case "Resolved":
+      return "#6ebc6e";
+    default:
+      throw new Error('Unknown state');
+  }
 }

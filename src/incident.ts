@@ -1,37 +1,53 @@
 import {json, status} from "itty-router-extras";
 import {Config, Incident} from "./domain";
 import {Request} from "itty-router";
-import {load, save} from "./store";
+import {Store} from "./store";
 import {notify} from "./notification";
 
-export async function getIncidents(request: Request): Promise<Response> {
-  return load()
+export function getIncidents(request: Request): Promise<Response> {
+  return Store.load(true, false, false)
       .then(store =>
-          request.query?.filter === "active"
-              ? json(store.incidents?.filter(incident => !incident.end))
-              : json(store.incidents)
+          json((
+              request.query?.filter === "active"
+                  ? store.getActiveIncidents()
+                  : store.getIncidents()
+          ).map(([id, namespace, service, start, end]) => ({id, namespace, service, start, end})))
       );
 }
 
 export async function postIncidents(config: Config, request: Request): Promise<Response> {
   const newIncidents: Incident[] = await request.json?.();
-  const store = await load();
+  const store = await Store.load(true, true, true/*false, true, false*/);
   let changed = false;
 
   let new0: Incident[] = [];
   let resolved: Incident[] = [];
 
   for (let incident of newIncidents) {
-    const is = store.incidents.filter(i => i.namespace === incident.namespace && i.service === incident.service);
-    const active = is.find(i => !i.end);
+    if (incident.end) {
+      const res = store.resolveIncident(incident.namespace, incident.service, Number(incident.end));
 
-    if (!active) {
-      if (!incident.end) {
+      if (res) {
+        resolved.push({
+          id: res[0],
+          namespace: res[1],
+          service: res[2],
+          start: res[3],
+          end: res[4]
+        })
+        changed = true;
+      }
+    }
+    else {
+      const activeIncident = store.getActiveIncidentByService(incident.namespace, incident.service);
+
+      if (!activeIncident) {
         let newIncident = {
           namespace: String(incident.namespace),
           service: String(incident.service),
-          id: nextId(store.incidents, incident.namespace),
-          start: Number(incident.start)
+          id: store.getNextIncidentId(incident.namespace),
+          start: Number(incident.start),
+          end: null
         };
 
         if (!config.namespaces.find(namespace => newIncident.namespace === namespace.id)) {
@@ -42,40 +58,23 @@ export async function postIncidents(config: Config, request: Request): Promise<R
           throw new Error(`Service ${newIncident.service} not found`);
         }
 
-        store.incidents.push(newIncident);
+        store.addIncident(newIncident);
         new0.push(newIncident);
         changed = true;
       }
     }
-    else if (incident.end) {
-      active.end = Number(incident.end);
-      resolved.push(active);
-      changed = true;
-    }
   }
 
   if (changed) {
-    const active: Incident[] = store.incidents.filter(i =>
-        !i.end && !new0.find(a => (a.namespace === i.namespace && a.service === i.service) || a.start === i.start)
-    );
+    const active: Incident[] = store.getActiveIncidents()
+        .filter(incident => !new0.find(a => (a.namespace === incident[1] && a.service === incident[2]) || a.start === incident[3]))
+        .map(([id, namespace, service, start, end]) => ({id, namespace, service, start, end}));
 
     await Promise.all([
-      save(store),
+      store.save(),
       notify(config, active, new0, resolved)
     ]);
   }
 
   return status(202);
-}
-
-function nextId(incidents: Incident[], namespace: string): number {
-  let id = -1;
-
-  for (let incident of incidents) {
-    if (incident.namespace === namespace && id < incident.id) {
-      id++;
-    }
-  }
-
-  return id + 1;
 }

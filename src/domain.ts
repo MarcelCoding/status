@@ -34,7 +34,7 @@ export interface Incident {
   namespace: string;
   service: string;
   start: number;
-  end?: number;
+  end: number | null;
 }
 
 export enum PingKind {
@@ -48,12 +48,12 @@ export interface Ping {
   time: number;
   ms: number;
   location: string,
-  kind?: PingKind;
+  kind: PingKind | null;
 }
 
-export function pingKindFromString(value?: string | PingKind): PingKind | undefined {
+export function pingKindFromString(value: string | PingKind | null): PingKind | null {
   if (!value) {
-    return undefined;
+    return null;
   }
 
   switch (String(value.trim().toUpperCase())) {

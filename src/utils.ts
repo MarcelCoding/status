@@ -51,7 +51,7 @@ export function formatDuration(delta: number): string {
   }
 
   if (seconds != 0) {
-    result.push(`${seconds} minutes`);
+    result.push(`${seconds} seconds`);
   }
 
   return humanList(result);

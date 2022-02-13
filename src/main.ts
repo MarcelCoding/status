@@ -1,11 +1,11 @@
 import {Router} from 'itty-router';
-import {error, json, missing} from 'itty-router-extras';
+import {error, json, missing, text} from 'itty-router-extras';
 // @ts-expect-error
 import config from './config.yaml';
 import {Config} from "./domain";
 import {getIncidents, postIncidents} from "./incident";
 import {getPings, postPings} from "./ping";
-import {load} from "./store";
+import {Store} from "./store";
 import {Sentry} from "./sentry";
 
 const {namespaces, services}: Config = config;
@@ -30,7 +30,7 @@ const router = Router({base: '/api'})
     .post('/incidents', auth, request => postIncidents(config, request))
     .get('/pings', getPings)
     .post('/pings', auth, request => postPings(config, request))
-    .get('/store', async () => json(await load()))
+    .get('/store', async () => json(await Store.load(true, true, true)))
     .all('*', () => missing("Endpoint not found."));
 
 addEventListener("fetch", (event: FetchEvent) => {
