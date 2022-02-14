@@ -17,7 +17,7 @@ export default {
   },
   plugins: [
     yaml(),
-    resolve(),
+    resolve({browser: true}),
     commonjs(),
     typescript(),
     production && terser() // minify, but only in production

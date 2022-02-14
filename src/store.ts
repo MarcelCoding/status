@@ -2,6 +2,9 @@ import {parse} from "../node_modules/csv-parse/dist/esm/sync";
 import {stringify} from "../node_modules/csv-stringify/dist/esm/sync";
 import {Incident, Ping, PingKind, pingKindFromString} from "./domain";
 
+const SECONDS_PER_HOUR = 60 * 60;
+const SECONDS_PER_DAY = SECONDS_PER_HOUR * 24;
+
 export type IncidentArray = [number, string, string, number, number | null];
 export type PingArray = [string, string, number, number, string, PingKind | null];
 
@@ -14,8 +17,8 @@ interface RawStore {
 export class Store {
   private constructor(
       private readonly incidents: IncidentArray[] | null,
-      private readonly pings: PingArray[] | null,
-      private readonly hourlyPings: PingArray[] | null
+      private pings: PingArray[] | null,
+      private hourlyPings: PingArray[] | null
   ) {
   }
 
@@ -119,6 +122,54 @@ export class Store {
       ping.location,
       ping.kind
     ]);
+  }
+
+  public aggregatePings(): void {
+    const now = Date.now() / 1000;
+    const ninetyDaysAgo = now - 90 * SECONDS_PER_DAY;
+    const currHour = Math.floor(now - now % SECONDS_PER_HOUR);
+
+    const pings = this.getPings();
+    this.pings = [];
+
+    this.hourlyPings = this.getHourlyPings()
+        // delete pings older than 90 days
+        .filter(ping => ping[2] > ninetyDaysAgo);
+
+    const grouped: { [key: string]: PingArray[] } = {};
+
+    for (let ping of pings) {
+      if (ping[2] >= currHour) {
+        this.pings.push(ping);
+        continue;
+      }
+
+      const groupKey = `${Math.floor(ping[2] / SECONDS_PER_HOUR)}.${ping[5] || ''}.${ping[4]}`;
+
+      if (grouped[groupKey]) {
+        grouped[groupKey].push(ping);
+      }
+      else {
+        grouped[groupKey] = [ping];
+      }
+    }
+
+    for (let groupKey in grouped) {
+      const [hour, kind, location] = groupKey.split('.', 3);
+      const group = grouped[groupKey];
+      const avgPing = group.reduce((prev, ping) => prev + ping[3], 0) / group.length;
+
+      const [namespace, service] = group[0];
+
+      this.hourlyPings.push([
+        namespace,
+        service,
+        Number(hour),
+        avgPing,
+        location,
+        pingKindFromString(kind)
+      ])
+    }
   }
 
   public getHourlyPings(): PingArray[] {

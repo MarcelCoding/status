@@ -4,6 +4,18 @@ import {Config, Ping, pingKindFromString} from "./domain";
 import {Store} from "./store";
 
 export function getPings(): Promise<Response> {
+  return Store.load(false, false, true)
+      .then(store => json(store.getHourlyPings().map(([namespace, service, time, ms, location, kind]) => ({
+        namespace,
+        service,
+        time,
+        ms,
+        location,
+        kind
+      }))));
+}
+
+export function getRecentPings(): Promise<Response> {
   return Store.load(false, true, false)
       .then(store => json(store.getPings().map(([namespace, service, time, ms, location, kind]) => ({
         namespace,
@@ -42,16 +54,10 @@ export async function postPings(config: Config, request: Request): Promise<Respo
       store.addPing(newPing);
     }
 
-    // TODO
-    // archivePings(store);
+    store.aggregatePings();
 
     await store.save();
   }
 
   return status(202);
 }
-
-// TODO
-// export async function archivePings(store: Store): void {
-//
-// }

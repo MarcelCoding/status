@@ -52,7 +52,7 @@ export interface Ping {
 }
 
 export function pingKindFromString(value: string | PingKind | null): PingKind | null {
-  if (!value) {
+  if (!value?.length) {
     return null;
   }
 

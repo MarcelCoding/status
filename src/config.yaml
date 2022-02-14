@@ -21,7 +21,7 @@ services:
     namespace: m4rc3l
     url: https://www.google.com/
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: abc
@@ -29,7 +29,7 @@ services:
     namespace: m4rc3l
     url: https://abc.m4rc3l.de/abc
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: ws
@@ -37,7 +37,7 @@ services:
     namespace: cryptic
     url: https://ws.cryptic-game.net
     method: GET
-    timeout: 5
+    timeout: 8
     status: 400
 
   - id: rest-api
@@ -45,7 +45,7 @@ services:
     namespace: cryptic
     url: https://server.cryptic-game.net/status
     method: GET
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: frontend
@@ -53,7 +53,7 @@ services:
     namespace: cryptic
     url: https://play.cryptic-game.net
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: website
@@ -61,7 +61,7 @@ services:
     namespace: cryptic
     url: https://www.cryptic-game.net
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: wiki
@@ -69,7 +69,7 @@ services:
     namespace: cryptic
     url: https://wiki.cryptic-game.net
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: docs
@@ -77,7 +77,7 @@ services:
     namespace: cryptic
     url: https://docs.cryptic-game.net
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: weblate
@@ -85,7 +85,7 @@ services:
     namespace: cryptic
     url: https://weblate.cryptic-game.net
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: website
@@ -93,7 +93,7 @@ services:
     namespace: morpheus
     url: https://the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: id
@@ -101,7 +101,7 @@ services:
     namespace: morpheus
     url: https://id.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 301
 
   - id: certificates
@@ -109,7 +109,7 @@ services:
     namespace: morpheus
     url: https://certificates.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: cc
@@ -117,7 +117,7 @@ services:
     namespace: morpheus
     url: https://cc.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: element
@@ -125,7 +125,7 @@ services:
     namespace: morpheus
     url: https://element.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: matrix
@@ -133,7 +133,7 @@ services:
     namespace: morpheus
     url: https://synapse.the-morpheus.de/_matrix/static/
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: md
@@ -141,7 +141,7 @@ services:
     namespace: morpheus
     url: https://md.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: academy
@@ -149,7 +149,7 @@ services:
     namespace: morpheus
     url: https://the-morpheus.academy
     method: GET
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: resources
@@ -157,7 +157,7 @@ services:
     namespace: morpheus
     url: https://resources.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: jitsi
@@ -165,7 +165,7 @@ services:
     namespace: morpheus
     url: https://jitsi.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: public
@@ -173,7 +173,7 @@ services:
     namespace: morpheus
     url: https://public.the-morpheus.de
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: grafana
@@ -181,7 +181,7 @@ services:
     namespace: morpheus
     url: https://grafana.the-morpheus.org/login
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: challenges
@@ -189,7 +189,7 @@ services:
     namespace: morpheus
     url: https://the-morpheus.cc
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: challenges_api
@@ -197,7 +197,7 @@ services:
     namespace: morpheus
     url: https://api.the-morpheus.cc/status
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: docs
@@ -205,7 +205,7 @@ services:
     namespace: secshell
     url: https://docs.secshell.net/de/
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: guacamole
@@ -213,7 +213,7 @@ services:
     namespace: secshell
     url: https://guacamole.secshell.net/
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
 
   - id: overleaf
@@ -221,5 +221,5 @@ services:
     namespace: secshell
     url: https://overleaf.secshell.net/login
     method: HEAD
-    timeout: 5
+    timeout: 8
     status: 200
