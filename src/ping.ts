@@ -3,6 +3,8 @@ import {json, status} from "itty-router-extras";
 import {Config, Ping, pingKindFromString} from "./domain";
 import {Store} from "./store";
 
+const SECONDS_PER_HOUR = 60 * 60;
+
 export function getPings(): Promise<Response> {
   return Store.load(false, false, true)
       .then(store => json(store.getHourlyPings().map(([namespace, service, time, ms, location, kind]) => ({
@@ -29,11 +31,16 @@ export function getRecentPings(): Promise<Response> {
 
 export async function postPings(config: Config, request: Request): Promise<Response> {
   const newPings: Ping[] = await request.json?.();
+  const maxAge = Date.now() / 1000 - 3 * SECONDS_PER_HOUR;
 
   if (newPings.length) {
     const store = await Store.load(true, true, true/*false, true, false*/);
 
     for (let ping of newPings) {
+      if (ping.time < maxAge) {
+        continue;
+      }
+
       const newPing = {
         service: String(ping.service),
         namespace: String(ping.namespace),

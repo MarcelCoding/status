@@ -127,7 +127,7 @@ export class Store {
   public aggregatePings(): void {
     const now = Date.now() / 1000;
     const ninetyDaysAgo = now - 90 * SECONDS_PER_DAY;
-    const currHour = Math.floor(now - now % SECONDS_PER_HOUR);
+    const maxAge = Math.floor(now - 3 * SECONDS_PER_HOUR);
 
     const pings = this.getPings();
     this.pings = [];
@@ -139,7 +139,7 @@ export class Store {
     const grouped: { [key: string]: PingArray[] } = {};
 
     for (let ping of pings) {
-      if (ping[2] >= currHour) {
+      if (ping[2] >= maxAge) {
         this.pings.push(ping);
         continue;
       }
@@ -164,7 +164,7 @@ export class Store {
       this.hourlyPings.push([
         namespace,
         service,
-        Number(hour),
+        Number(hour) * SECONDS_PER_HOUR,
         avgPing,
         location,
         pingKindFromString(kind)
