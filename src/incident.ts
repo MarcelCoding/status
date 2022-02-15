@@ -17,7 +17,7 @@ export function getIncidents(request: Request): Promise<Response> {
 
 export async function postIncidents(config: Config, request: Request): Promise<Response> {
   const newIncidents: Incident[] = await request.json?.();
-  const store = await Store.load(true, true, true/*false, true, false*/);
+  const store = await Store.load(true, false, false);
   let changed = false;
 
   let new0: Incident[] = [];

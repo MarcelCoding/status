@@ -8,12 +8,6 @@ const SECONDS_PER_DAY = SECONDS_PER_HOUR * 24;
 export type IncidentArray = [number, string, string, number, number | null];
 export type PingArray = [string, string, number, number, string, PingKind | null];
 
-interface RawStore {
-  incidents?: string;
-  pings?: string;
-  hourlyPings?: string;
-}
-
 export class Store {
   private constructor(
       private readonly incidents: IncidentArray[] | null,
@@ -23,27 +17,21 @@ export class Store {
   }
 
   public static async load(incidents: boolean, pings: boolean, hourlyPings: boolean): Promise<Store> {
-    let raw = await STATUS.get<RawStore>("store", {type: "json"});
-
-    const i = !incidents ? null : parseCsv<string[]>(raw?.incidents).map(parseIncident);
-    const p = !pings ? null : parseCsv<string[]>(raw?.pings).map(parsePing);
-    const h = !hourlyPings ? null : parseCsv<string[]>(raw?.hourlyPings).map(parsePing);
+    const [i, p, h] = await Promise.all([
+      load('incidents', incidents).then(data => data ? data.map(parseIncident) : null),
+      load('pings', pings).then(data => data ? data.map(parsePing) : null),
+      load('hourlyPings', hourlyPings).then(data => data ? data.map(parsePing) : null)
+    ]);
 
     return new Store(i, p, h);
   }
 
   public save(): Promise<void> {
-    if (!this.incidents || !this.pings || !this.hourlyPings) {
-      throw new Error("Store can only be saved if it was fully loaded");
-    }
-
-    const raw: RawStore = {
-      incidents: toCsv(this.incidents),
-      pings: toCsv(this.pings),
-      hourlyPings: toCsv(this.hourlyPings)
-    };
-
-    return STATUS.put("store", JSON.stringify(raw)).then();
+    return Promise.all([
+      save('incidents', this.incidents),
+      save('pings', this.pings),
+      save('hourlyPings', this.hourlyPings)
+    ]).then();
   }
 
   public getIncidents(): IncidentArray[] {
@@ -181,7 +169,24 @@ export class Store {
   }
 }
 
-function parseCsv<T>(data?: string): T[] {
+async function load(key: string, read: boolean): Promise<string[][] | null> {
+  if (!read) {
+    return null;
+  }
+
+  return STATUS.get(key, {type: "text"})
+      .then(raw => raw?.length ? parseCsv(raw) : []);
+}
+
+async function save(key: string, data: unknown[] | null): Promise<void> {
+  if (!data) {
+    return;
+  }
+
+  return STATUS.put(key, toCsv(data));
+}
+
+function parseCsv(data?: string): string[][] {
   if (!data?.length) {
     return [];
   }

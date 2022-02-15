@@ -1,5 +1,5 @@
 import {Router} from 'itty-router';
-import {error, json, missing, status} from 'itty-router-extras';
+import {error, json, missing} from 'itty-router-extras';
 // @ts-expect-error
 import config from './config.yaml';
 import {Config} from "./domain";
