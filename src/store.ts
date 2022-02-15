@@ -157,7 +157,7 @@ export class Store {
     for (let groupKey in grouped) {
       const [hour, kind, location] = groupKey.split('.', 3);
       const group = grouped[groupKey];
-      const avgPing = group.reduce((prev, ping) => prev + ping[3], 0) / group.length;
+      const avgPing = Math.round(group.reduce((prev, ping) => prev + ping[3], 0) / group.length);
 
       const [namespace, service] = group[0];
 
