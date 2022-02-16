@@ -34,7 +34,7 @@ export async function postPings(config: Config, request: Request): Promise<Respo
   const maxAge = Date.now() / 1000 - 3 * SECONDS_PER_HOUR;
 
   if (newPings.length) {
-    const store = await Store.load(false, true, false);
+    const store = await Store.load(false, true, true);
 
     for (let ping of newPings) {
       if (ping.time < maxAge) {

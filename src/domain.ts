@@ -7,12 +7,6 @@ export interface EMailRecipients {
   [email: string]: string[]
 }
 
-export interface Store {
-  incidents: Incident[];
-  pings: Ping[];
-  hourlyAveragePings: Ping[];
-}
-
 export interface Namespace {
   id: string;
   name: string;

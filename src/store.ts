@@ -114,7 +114,7 @@ export class Store {
 
   public aggregatePings(): void {
     const now = Date.now() / 1000;
-    const ninetyDaysAgo = now - 90 * SECONDS_PER_DAY;
+    const ninetyDaysAgo = Math.floor(now - 90 * SECONDS_PER_DAY);
     const maxAge = Math.floor(now - 3 * SECONDS_PER_HOUR);
 
     const pings = this.getPings();
@@ -122,7 +122,7 @@ export class Store {
 
     this.hourlyPings = this.getHourlyPings()
         // delete pings older than 90 days
-        .filter(ping => ping[2] > ninetyDaysAgo);
+        .filter(ping => ping[2] >= ninetyDaysAgo);
 
     const grouped: { [key: string]: PingArray[] } = {};
 
