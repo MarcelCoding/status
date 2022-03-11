@@ -16,22 +16,6 @@ namespaces:
     url: https://status.secshell.net
 
 services:
-  - id: google
-    name: Google
-    namespace: m4rc3l
-    url: https://www.google.com/
-    method: HEAD
-    timeout: 8
-    status: 200
-
-  - id: abc
-    name: ABC
-    namespace: m4rc3l
-    url: https://abc.m4rc3l.de/abc
-    method: HEAD
-    timeout: 8
-    status: 200
-
   - id: ws
     name: WebSocket
     namespace: cryptic
@@ -136,14 +120,6 @@ services:
     timeout: 8
     status: 200
 
-  - id: md
-    name: HedgeDoc
-    namespace: morpheus
-    url: https://md.the-morpheus.de
-    method: HEAD
-    timeout: 8
-    status: 200
-
   - id: academy
     name: The Morpheus Academy
     namespace: morpheus
@@ -172,14 +148,6 @@ services:
     name: Public
     namespace: morpheus
     url: https://public.the-morpheus.de
-    method: HEAD
-    timeout: 8
-    status: 200
-
-  - id: grafana
-    name: Grafana
-    namespace: morpheus
-    url: https://grafana.the-morpheus.org/login
     method: HEAD
     timeout: 8
     status: 200
